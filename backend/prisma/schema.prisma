@@ -1,0 +1,64 @@
+
+
+generator client {
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  stock     Int
+  sku       String   @unique
+  image     String?
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  fname  String?
+  lname  String?
+  role  Role    @default(USER)
+  password String 
+}
+
+model Order {
+  id           Int         @id @default(autoincrement())
+  customerName String
+  quantity     Int
+  status       OrderStatus @default(PENDING)
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  DELIVERED
+  CANCELLED
+}
+
+
+
+enum Role {
+  USER
+  ADMIN
+}
+
