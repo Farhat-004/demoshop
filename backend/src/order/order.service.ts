@@ -35,7 +35,9 @@ export class OrderService {
     });
 
     return order;
-  });
+  },
+  {timeout:20000}
+  );
 }
 
 
