@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Input, Button, Checkbox, Card, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router";
@@ -8,8 +8,10 @@ const { Title, Text } = Typography;
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const { setAuth } = useContext(AuthContext);
     const onFinish = async (values) => {
+        setLoading(true);
         try {
             const response = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
@@ -29,6 +31,8 @@ export default function LoginPage() {
             if (response.status == 201) navigate("/");
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -85,6 +89,7 @@ export default function LoginPage() {
                         <Button
                             type="primary"
                             htmlType="submit"
+                            disabled={loading}
                             className="w-full"
                             block
                         >

@@ -24,11 +24,14 @@ export default function EditProduct() {
             if (formData.image) {
                 const data = new FormData();
                 data.append("file", formData.image);
-                data.append("upload_preset", "final-project");
-                data.append("cloud_name", "dtk2ucppn");
+                data.append(
+                    "upload_preset",
+                    import.meta.env.VITE_UPLOAD_PRESET,
+                );
+                data.append("cloud_name", import.meta.env.VITE_CLOUD_NAME);
 
                 const response = await fetch(
-                    "https://api.cloudinary.com/v1_1/dtk2ucppn/image/upload",
+                    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
                     {
                         method: "POST",
                         body: data,
