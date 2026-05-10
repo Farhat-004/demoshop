@@ -7,7 +7,7 @@ DemoShop is a full-stack POS (Point of Sale) style web application built to mana
 ## Live URLs
 
 **Frontend:**  
-https://demoshop-phi.vercel.app
+https://demoshop-phi.vercel.app   note: Cuurent free DB hosting was expired for limit
 
 ---
 
