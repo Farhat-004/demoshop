@@ -1,24 +1,19 @@
-
-
 generator client {
-  provider      = "prisma-client"
-  output        = "../src/generated/prisma"
-  moduleFormat  = "cjs"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Float
-  stock     Int
-  sku       String   @unique
-  image     String?
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  price Float
+  stock Int
+  sku   String  @unique
+  image String?
 
   orders Order[]
 
@@ -27,21 +22,21 @@ model Product {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  fname  String?
-  lname  String?
-  role  Role    @default(USER)
-  password String 
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  fname    String?
+  lname    String?
+  role     Role    @default(USER)
+  password String
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   customerName String
   quantity     Int
   status       OrderStatus @default(PENDING)
 
-  productId Int
+  productId String  @db.ObjectId
   product   Product @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())
@@ -55,10 +50,7 @@ enum OrderStatus {
   CANCELLED
 }
 
-
-
 enum Role {
   USER
   ADMIN
 }
-

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateOrderDto {
@@ -5,10 +6,12 @@ export class CreateOrderDto {
   @IsNotEmpty()
   customerName: string;
 
+  @IsString()
+  @IsNotEmpty()
+  productId: string;
 
-  productId: number;
-
- 
+  @Type(() => Number)
+  @IsInt()
   @Min(1)
   quantity: number;
 }

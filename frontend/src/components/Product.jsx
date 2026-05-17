@@ -8,7 +8,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export default function Product({ product }) {
     const navigate = useNavigate();
     const { auth } = useContext(AuthContext);
-    console.log(auth);
 
     const { orderItems, setOrderItems } = useContext(OrderListContext);
     const [exists, setExists] = useState(orderItems.includes(product));

@@ -28,11 +28,11 @@ export class ProductService {
     return this.prisma.product.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.product.findUnique({where:{id}});
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  update(id: string, updateProductDto: UpdateProductDto) {
     return this.prisma.product.update({
       where:{id},
       data: {
@@ -43,7 +43,7 @@ export class ProductService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
    try {
     await this.prisma.product.delete({where:{id}});
     return {"message":`deleted product id=${id}`}

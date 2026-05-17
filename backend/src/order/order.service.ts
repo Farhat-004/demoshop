@@ -8,37 +8,39 @@ export class OrderService {
   constructor(private prisma: PrismaService, private productService:ProductService){}
 
   async create(createOrderDto: CreateOrderDto) {
-  console.log("SERVICE HIT", Date.now());
-
-  return await this.prisma.$transaction(async (tx) => {
-    const product = await tx.product.findUnique({
-      where: { id: Number(createOrderDto.productId) },
+    const product = await this.prisma.product.findUnique({
+      where: { id: createOrderDto.productId },
     });
 
-    if (!product) throw new Error("Product not found");
-    if (product.stock < createOrderDto.quantity)
-      throw new Error("Insufficient stock");
+    if (!product) {
+      throw new BadRequestException('Product not found');
+    }
+    if (product.stock < createOrderDto.quantity) {
+      throw new BadRequestException('Insufficient stock');
+    }
 
-    const order = await tx.order.create({
+    const stockUpdate = await this.prisma.product.updateMany({
+      where: {
+        id: product.id,
+        stock: { gte: createOrderDto.quantity },
+      },
+      data: {
+        stock: { decrement: createOrderDto.quantity },
+      },
+    });
+
+    if (stockUpdate.count === 0) {
+      throw new BadRequestException('Insufficient stock');
+    }
+
+    return this.prisma.order.create({
       data: {
         customerName: createOrderDto.customerName,
         productId: product.id,
         quantity: createOrderDto.quantity,
       },
     });
-
-    await tx.product.update({
-      where: { id: product.id },
-      data: {
-        stock: { decrement: createOrderDto.quantity },
-      },
-    });
-
-    return order;
-  },
-  {timeout:20000}
-  );
-}
+  }
 
 
   async findAll() {
@@ -62,14 +64,14 @@ export class OrderService {
   //   return `This action returns a #${id} order`;
   // }
 
-  async update(id: number, updateOrderDto) {
+  async update(id: string, updateOrderDto) {
     return await this.prisma.order.update({
       where: { id },
       data: { status: updateOrderDto.status },
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     //todo- update product before deletion
     return await this.prisma.order.delete({
       where: { id },
