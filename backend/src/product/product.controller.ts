@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { Role } from 'src/dtos/registerUser.dto';
-import { Roles } from 'src/auth/role.decoretor';
-import { RolesGuard } from 'src/auth/role.guard';
+import { AuthGuard } from '../auth/auth.guard';
+import { Role } from '../dtos/registerUser.dto';
+import { Roles } from '../auth/role.decoretor';
+import { RolesGuard } from '../auth/role.guard';
 
 @Controller('products') //products
 export class ProductController {
